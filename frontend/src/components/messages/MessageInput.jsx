@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 // import { BaSend } from "react-icons/ba";
 import { IoSend } from "react-icons/io5";
+import useSendMessage from "../../hooks/useSendMessage";
 
 const MessageInput = () => {
+  const [message, setMessage] = useState("");
+  const [loading, sendMessage] = useSendMessage();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!message) return;
+    await sendMessage(message);
+    setMessage("");
+  };
   return (
-    <form className="px-4 my-3">
+    <form className="px-4 my-3" onSubmit={handleSubmit}>
       <div className="w-full relative">
         <input
           type="text"
@@ -15,7 +25,11 @@ const MessageInput = () => {
           className="absolute inset-y-0 end-0 flex text-white items-center pe-3"
           type="submit"
         >
-          <IoSend />
+          {loading ? (
+            <div className="loading loading-spinner"></div>
+          ) : (
+            <IoSend />
+          )}
         </button>
       </div>
     </form>
